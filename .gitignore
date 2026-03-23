@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+/data/adventuredb.mv.db
+/data/adventuredb.trace.db
+/src/main/resources/data.sql
