@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.util.Set;
+import java.util.List;
 
 public record CreateSectionDto (
         @Size(min = 1)
@@ -14,7 +14,6 @@ public record CreateSectionDto (
         String text,
         @NotNull
         SectionType type,
-        
-        Set<CreateOptionDto> options
-) {
-}
+
+        List<CreateOptionDto> options
+) { }

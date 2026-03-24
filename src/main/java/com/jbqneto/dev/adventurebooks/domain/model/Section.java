@@ -13,12 +13,19 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "book_section")
+@Table(name = "book_section",
+        indexes = {
+            @Index(name = "idx_section_reference", columnList = "reference")
+        }
+)
 public class Section {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "reference", nullable = false)
+    private Integer reference;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
