@@ -2,6 +2,7 @@ package com.jbqneto.dev.adventurebooks.domain.mapper;
 
 import com.jbqneto.dev.adventurebooks.api.dto.request.*;
 import com.jbqneto.dev.adventurebooks.api.dto.response.BookCreatedResponseDto;
+import com.jbqneto.dev.adventurebooks.api.dto.response.BookDetailsResponseDto;
 import com.jbqneto.dev.adventurebooks.api.dto.response.BookSummaryResponseDto;
 import com.jbqneto.dev.adventurebooks.domain.model.*;
 import org.mapstruct.Mapper;
@@ -62,4 +63,6 @@ public interface BookMapper {
     List<Option> toOptionEntities(List<CreateOptionDto> dtos);
 
     BookCreatedResponseDto toCreatedResponse(Book book);
+
+    BookDetailsResponseDto toDetailsResponse(Book book);
 }

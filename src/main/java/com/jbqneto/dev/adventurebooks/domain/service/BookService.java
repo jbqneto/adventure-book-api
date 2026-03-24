@@ -6,8 +6,11 @@ import com.jbqneto.dev.adventurebooks.api.dto.response.BookCreatedResponseDto;
 import com.jbqneto.dev.adventurebooks.api.dto.response.BookDetailsResponseDto;
 import com.jbqneto.dev.adventurebooks.api.dto.response.BookSummaryResponseDto;
 import com.jbqneto.dev.adventurebooks.domain.enumType.DifficultyLevel;
+import com.jbqneto.dev.adventurebooks.domain.exception.BookNotFoundException;
 import com.jbqneto.dev.adventurebooks.domain.exception.CategoryNotFoundException;
 import com.jbqneto.dev.adventurebooks.domain.mapper.BookMapper;
+import com.jbqneto.dev.adventurebooks.domain.model.Book;
+import com.jbqneto.dev.adventurebooks.domain.model.Category;
 import com.jbqneto.dev.adventurebooks.domain.model.Section;
 import com.jbqneto.dev.adventurebooks.domain.validation.BookValidator;
 import com.jbqneto.dev.adventurebooks.infraestructure.repository.BookRepository;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -119,14 +123,41 @@ public class BookService {
         return bookMapper.toSummaryList(books);
     }
 
-    public BookDetailsResponseDto getBookById(Long bookId) {
-        return null;
+    public BookDetailsResponseDto getBookById(Long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(BookNotFoundException::new);
+
+        return bookMapper.toDetailsResponse(book);
     }
 
+    @Transactional
     public void addCategory(Long bookId, AddCategoriesRequestDto request) {
-        
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(BookNotFoundException::new);
+
+        List<Category> categories = categoryRepository.findAllById(request.categories());
+
+        if (categories.size() != request.categories().size()) {
+            throw new CategoryNotFoundException("Not all categories where found.");
+        }
+
+        for (Category category: categories) {
+            if (!book.getCategories().contains(category)) {
+                book.getCategories().add(category);
+            }
+        }
+
     }
 
-    public void removeCategory(Long bookId, Integer categoryId) {
+    @Transactional
+    public void removeCategory(Long bookId, Long categoryId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(BookNotFoundException::new);
+
+        List<Category> categories = book.getCategories().stream()
+                .filter(cat -> !Objects.equals(cat.getId(), categoryId))
+                .toList();
+
+        book.setCategories(categories);
     }
 }

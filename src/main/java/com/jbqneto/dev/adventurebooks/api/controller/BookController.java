@@ -18,6 +18,7 @@ public class BookController {
 
     private final BookService bookService;
 
+    //Objective 1
     @GetMapping
     public List<BookSummaryResponseDto> getBooks(
             @RequestParam(required = false) String title,
@@ -52,7 +53,7 @@ public class BookController {
     @DeleteMapping("/{bookId}/categories/{categoryId}")
     public void removeCategory(
             @PathVariable Long bookId,
-            @PathVariable Integer categoryId
+            @PathVariable Long categoryId
     ) {
         bookService.removeCategory(bookId, categoryId);
     }
