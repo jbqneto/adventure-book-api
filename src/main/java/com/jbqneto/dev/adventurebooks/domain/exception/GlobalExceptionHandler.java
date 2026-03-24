@@ -77,6 +77,24 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public org.springframework.http.ResponseEntity<ApiErrorResponseDto> handleNotFoundException(
+            Exception ex,
+            HttpServletRequest request
+    ) {
+        var response = new ApiErrorResponseDto(
+                Instant.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return org.springframework.http.ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     public org.springframework.http.ResponseEntity<ApiErrorResponseDto> handleGeneric(
             Exception ex,

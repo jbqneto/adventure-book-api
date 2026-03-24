@@ -1,6 +1,6 @@
 package com.jbqneto.dev.adventurebooks.domain.exception;
 
-public class CategoryNotFoundException extends RuntimeException {
+public class CategoryNotFoundException extends NotFoundException {
     public CategoryNotFoundException(Long id) {
         this("Category not found: " + id);
     }
