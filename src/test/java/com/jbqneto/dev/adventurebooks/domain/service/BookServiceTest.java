@@ -8,26 +8,36 @@ import com.jbqneto.dev.adventurebooks.domain.enumType.ConsequenceType;
 import com.jbqneto.dev.adventurebooks.domain.enumType.DifficultyLevel;
 import com.jbqneto.dev.adventurebooks.domain.enumType.SectionType;
 import com.jbqneto.dev.adventurebooks.domain.exception.*;
+import com.jbqneto.dev.adventurebooks.domain.mapper.BookMapper;
 import com.jbqneto.dev.adventurebooks.domain.model.Book;
 import com.jbqneto.dev.adventurebooks.infraestructure.repository.BookRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
 class BookServiceTest {
 
+    private final BookMapper bookMapper = Mappers.getMapper(BookMapper.class);
+
     @Mock
     BookRepository bookRepository;
 
-    @InjectMocks
     BookService serviceUnderTest;
+
+    @BeforeEach
+    void setup() {
+
+        serviceUnderTest = new BookService(bookRepository, bookMapper);
+    }
 
     @Test
     void shouldCreateBook() {
@@ -40,7 +50,7 @@ class BookServiceTest {
                 "The Cave Adventure",
                 DifficultyLevel.EASY,
                 Set.of(1, 2),
-                Set.of(beginSection, middleSection, endSection)
+                List.of(beginSection, middleSection(10, 2), middleSection(5,3), middleSection, endSection)
         );
 
         var book = serviceUnderTest.createBook(bookRequest);
@@ -57,7 +67,7 @@ class BookServiceTest {
                 "The Cave Adventure",
                 DifficultyLevel.EASY,
                 Set.of(1, 2),
-                Set.of(middleSection(1, 3))
+                List.of(middleSection(1, 3))
         );
 
         //when & then
@@ -75,7 +85,7 @@ class BookServiceTest {
                 "The Cave Adventure",
                 DifficultyLevel.EASY,
                 Set.of(1),
-                Set.of(beginSection(1), beginSection(2))
+                List.of(beginSection(1), beginSection(2))
         );
 
         //when & then
@@ -91,7 +101,7 @@ class BookServiceTest {
                 "The Cave Adventure",
                 DifficultyLevel.EASY,
                 Set.of(1),
-                Set.of(beginSection(1), middleSection(2, 1))
+                List.of(beginSection(1), middleSection(2, 1))
         );
 
         //when & then
@@ -100,14 +110,14 @@ class BookServiceTest {
 
     //Book has invalid next section id.
     @Test
-    void shouldThrowErrorCreatingBookWithoutInvalidSectionId() {
+    void shouldThrowErrorCreatingBookWithoutValidSectionId() {
         //given
         var bookRequest = new CreateBookRequestDto(
                 "J. R. R. Tolkien",
                 "The Cave Adventure",
                 DifficultyLevel.EASY,
                 Set.of(1),
-                Set.of(beginSection(1), middleSection(2, 3))
+                List.of(beginSection(1), endSection(), middleSection(2, 300))
         );
 
         //when & then
@@ -116,14 +126,14 @@ class BookServiceTest {
 
     //A non-ending section has no options
     @Test
-    void shouldThrowErrorCreatingBookWithoutNoEndingSectionWithoutOptions() {
+    void shouldThrowErrorCreatingBookWithNodeSectionWithoutOptions() {
         //given
         var bookRequest = new CreateBookRequestDto(
                 "J. R. R. Tolkien",
                 "The Cave Adventure",
                 DifficultyLevel.EASY,
                 Set.of(1),
-                Set.of(beginSection(1), middleSectionWithoutOptions(), endSection())
+                List.of(beginSection(1), middleSectionWithoutOptions(), endSection(5))
         );
 
         //when & then
@@ -131,8 +141,12 @@ class BookServiceTest {
     }
 
     private CreateSectionDto endSection() {
+        return endSection(3);
+    }
+
+    private CreateSectionDto endSection(int ref) {
         return new CreateSectionDto(
-                3,
+                ref,
                 "You found the treasure and escaped.",
                 SectionType.END,
                 null
@@ -144,7 +158,7 @@ class BookServiceTest {
                 ref,
                 "You move deeper into the cave and hear strange noises.",
                 SectionType.NODE,
-                Set.of(
+                List.of(
                         new CreateOptionDto(
                                 "Open the ancient chest",
                                 3,
@@ -168,7 +182,7 @@ class BookServiceTest {
                 1,
                 "You will now run into an error. hahahaha!!",
                 SectionType.NODE,
-                Set.of()
+                List.of()
         );
     }
 
@@ -177,7 +191,7 @@ class BookServiceTest {
                 ref,
                 "You are standing at the entrance of a dark cave.",
                 SectionType.BEGIN,
-                Set.of(
+                List.of(
                         new CreateOptionDto(
                                 "Enter the cave",
                                 2,

@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
 import java.util.Set;
 
 public record CreateBookRequestDto(
@@ -25,6 +26,6 @@ public record CreateBookRequestDto(
 
         @Valid
         @NotEmpty
-        Set<CreateSectionDto> sections
+        List<CreateSectionDto> sections
 ) {
 }
