@@ -27,7 +27,7 @@ public class Option {
     @JoinColumn(name = "section_id", nullable = false)
     private Section section;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "consequence_id", unique = true)
     private Consequence consequence;
 }

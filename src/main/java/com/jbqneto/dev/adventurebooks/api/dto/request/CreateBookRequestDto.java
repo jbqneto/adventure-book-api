@@ -22,7 +22,7 @@ public record CreateBookRequestDto(
         DifficultyLevel difficulty,
 
         @NotEmpty
-        Set<Integer> categories,
+        Set<Long> categories,
 
         @Valid
         @NotEmpty

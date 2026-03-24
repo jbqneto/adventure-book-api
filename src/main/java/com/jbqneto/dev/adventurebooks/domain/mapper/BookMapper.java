@@ -1,20 +1,17 @@
 package com.jbqneto.dev.adventurebooks.domain.mapper;
 
-import com.jbqneto.dev.adventurebooks.api.dto.request.CreateBookRequestDto;
-import com.jbqneto.dev.adventurebooks.api.dto.request.CreateConsequenceDto;
-import com.jbqneto.dev.adventurebooks.api.dto.request.CreateOptionDto;
-import com.jbqneto.dev.adventurebooks.api.dto.request.CreateSectionDto;
+import com.jbqneto.dev.adventurebooks.api.dto.request.*;
 import com.jbqneto.dev.adventurebooks.api.dto.response.BookCreatedResponseDto;
-import com.jbqneto.dev.adventurebooks.domain.model.Book;
-import com.jbqneto.dev.adventurebooks.domain.model.Consequence;
-import com.jbqneto.dev.adventurebooks.domain.model.Option;
-import com.jbqneto.dev.adventurebooks.domain.model.Section;
+import com.jbqneto.dev.adventurebooks.api.dto.response.BookSummaryResponseDto;
+import com.jbqneto.dev.adventurebooks.domain.model.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface BookMapper {
@@ -36,6 +33,10 @@ public interface BookMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "option", ignore = true)
     Consequence toEntity(CreateConsequenceDto dto);
+
+    BookSummaryResponseDto toSummary(Book book);
+
+    List<BookSummaryResponseDto> toSummaryList(List<Book> books);
 
 
     @Named("mapNextSection")

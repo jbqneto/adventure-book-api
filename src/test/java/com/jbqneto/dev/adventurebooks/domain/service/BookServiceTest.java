@@ -11,6 +11,7 @@ import com.jbqneto.dev.adventurebooks.domain.exception.*;
 import com.jbqneto.dev.adventurebooks.domain.mapper.BookMapper;
 import com.jbqneto.dev.adventurebooks.domain.model.Book;
 import com.jbqneto.dev.adventurebooks.infraestructure.repository.BookRepository;
+import com.jbqneto.dev.adventurebooks.infraestructure.repository.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,9 @@ class BookServiceTest {
     private final BookMapper bookMapper = Mappers.getMapper(BookMapper.class);
 
     @Mock
+    CategoryRepository categoryRepository;
+
+    @Mock
     BookRepository bookRepository;
 
     BookService serviceUnderTest;
@@ -36,7 +40,7 @@ class BookServiceTest {
     @BeforeEach
     void setup() {
 
-        serviceUnderTest = new BookService(bookRepository, bookMapper);
+        serviceUnderTest = new BookService(bookRepository, categoryRepository, bookMapper);
     }
 
     @Test

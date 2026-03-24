@@ -2,6 +2,7 @@ package com.jbqneto.dev.adventurebooks.domain.exception;
 
 import com.jbqneto.dev.adventurebooks.api.dto.error.ApiErrorResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,6 +13,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -80,6 +82,8 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request
     ) {
+        log.error("Server internal error", ex);
+
         ApiErrorResponseDto response = new ApiErrorResponseDto(
                 Instant.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),

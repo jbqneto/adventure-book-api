@@ -1,5 +1,6 @@
 package com.jbqneto.dev.adventurebooks.api.dto.response;
 
+import com.jbqneto.dev.adventurebooks.api.dto.request.GetCategoryDto;
 import com.jbqneto.dev.adventurebooks.domain.enumType.DifficultyLevel;
 
 import java.util.Set;
@@ -9,6 +10,6 @@ public record BookSummaryResponseDto(
         String title,
         String author,
         DifficultyLevel difficulty,
-        Set<String> categories
+        Set<GetCategoryDto> categories
 ) {
 }

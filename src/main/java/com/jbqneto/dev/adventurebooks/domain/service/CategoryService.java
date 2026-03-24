@@ -24,14 +24,15 @@ public class CategoryService {
     }
 
     public CategoryResponseDto create(CreateCategoryRequestDto request) {
-        var existing = categoryRepository.findByName(request.name());
+        var categoryName = request.name().toUpperCase();
+        var existing = categoryRepository.findByName(categoryName);
 
         if (existing.isPresent()) {
             throw new CategoryAlreadyExistsException();
         }
 
         var category = new Category();
-        category.setName(request.name());
+        category.setName(categoryName);
 
         var saved = categoryRepository.save(category);
 
