@@ -1,6 +1,8 @@
 package com.jbqneto.dev.adventurebooks.domain.model;
 
 import com.jbqneto.dev.adventurebooks.domain.enumType.DifficultyLevel;
+import com.jbqneto.dev.adventurebooks.domain.enumType.SectionType;
+import com.jbqneto.dev.adventurebooks.domain.exception.SectionNotFoundException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,5 +48,12 @@ public class Book {
             orphanRemoval = true
     )
     private List<Section> sections = new ArrayList<>();
+
+    public Section getBeginningSection() {
+        return this.sections.stream()
+                .filter(sec -> sec.getType() == SectionType.BEGIN)
+                .findFirst()
+                .orElseThrow(SectionNotFoundException::BeginningSectionNotFound);
+    }
 
 }

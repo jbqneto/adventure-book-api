@@ -31,11 +31,11 @@ This application allows players to start an adventure, navigate through sections
 * List/Create/Delete Player
 * Create Books with Sections, options and consequences
 * Add/Remove Category from Book
-[] Start an adventure (player + book)
-[] Navigate through sections by choosing options
-[] Apply consequences (e.g. lose health)
-[] Track player progress
-[] Detect end of game (FINISHED / DEAD)
+* Start an adventure (player + book)
+* [-] Navigate through sections by choosing options
+* [-] Apply consequences (e.g. lose health)
+* [-] Track player progress
+* [-] Detect end of game (FINISHED / DEAD)
 
 ---
 
@@ -92,144 +92,7 @@ Password: (empty)
 
 ## 📡 API Overview
 
-### 📚 Books
-
-#### Create Book
-
-```http
-POST /api/books
-```
-
-#### List Books (with filters)
-
-```http
-GET /api/books?title=&author=&category=&difficulty=
-```
-
-#### Get Book Details
-
-```http
-GET /api/books/{id}
-```
-
----
-
-### 👤 Players
-
-#### Create Player
-
-```http
-POST /api/players
-```
-
-#### Delete Player
-
-```http
-DELETE /api/players/{id}
-```
-
----
-
-### 🏷️ Categories
-
-#### List Categories
-
-```http
-GET /api/categories
-```
-
-#### Create Category
-
-```http
-POST /api/categories
-```
-
-#### Delete Category
-
-```http
-DELETE /api/categories/{name}
-```
-
----
-
-### 🎮 Adventures (Core Feature)
-
-#### Start Adventure
-
-```http
-POST /api/adventures
-```
-
-Body:
-
-```json
-{
-  "playerId": 1,
-  "bookId": 1
-}
-```
-
----
-
-#### Get Adventure State
-
-```http
-GET /api/adventures/{id}
-```
-
----
-
-#### Choose Option
-
-```http
-POST /api/adventures/{id}/choices
-```
-
-Body:
-
-```json
-{
-  "optionId": 10
-}
-```
-
----
-
-## 🧠 Business Rules
-
-* A book must contain:
-
-    * Exactly one BEGIN section
-    * At least one ENDING section
-* Player starts with **10 health**
-* Choosing an option may:
-
-    * Move to another section
-    * Apply consequences (e.g. lose health)
-* If health reaches 0 → status = **DEAD**
-* If reaching ENDING → status = **FINISHED**
-* Once finished or dead → no further actions allowed
-
----
-
-## 🧩 Project Structure
-
-```
-api/
-  controller/
-  dto/
-
-domain/
-  model/
-  enumtype/
-
-repository/
-
-service/
-
-config/
-bootstrap/
-```
+http://localhost:8080/swagger-ui/index.html
 
 ---
 

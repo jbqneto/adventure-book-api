@@ -13,6 +13,7 @@ import com.jbqneto.dev.adventurebooks.domain.model.*;
 import com.jbqneto.dev.adventurebooks.infraestructure.repository.BookRepository;
 import com.jbqneto.dev.adventurebooks.infraestructure.repository.PlayerProgressRepository;
 import com.jbqneto.dev.adventurebooks.infraestructure.repository.PlayerRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class AdventureService {
 
     private final AdventureMapper adventureMapper;
 
+    @Transactional
     public AdventureResponseDto choose(Long adventureId, Long optionId) {
         PlayerProgress progress = playerProgressRepository.findById(adventureId)
                 .orElseThrow(AdventureNotFoundException::new);
@@ -58,7 +60,6 @@ public class AdventureService {
         if (health == 0) {
             progress.setStatus(ProgressStatus.DEAD);
         }
-
 
         //TODO: Calculate consequence on this choice properly
 
@@ -109,6 +110,7 @@ public class AdventureService {
         PlayerProgress playerProgress = new PlayerProgress();
         playerProgress.setPlayer(player);
         playerProgress.setBook(book);
+        playerProgress.setCurrentSection(book.getBeginningSection());
         playerProgress.setStatus(ProgressStatus.IN_PROGRESS);
 
         return playerProgressRepository.save(playerProgress);
