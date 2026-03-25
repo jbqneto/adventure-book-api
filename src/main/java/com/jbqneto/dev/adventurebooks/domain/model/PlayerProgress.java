@@ -26,6 +26,8 @@ import lombok.ToString;
 )
 public class PlayerProgress {
 
+    public static final int INITIAL_HEALTH = 10;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,7 +45,7 @@ public class PlayerProgress {
     private Section currentSection;
 
     @Column(nullable = false)
-    private int health = 10;
+    private int health = INITIAL_HEALTH;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

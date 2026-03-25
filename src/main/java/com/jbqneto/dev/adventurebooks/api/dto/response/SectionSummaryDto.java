@@ -4,6 +4,6 @@ import com.jbqneto.dev.adventurebooks.domain.enumType.SectionType;
 
 public record SectionSummaryDto(
         Long id,
-        Integer referenceId,
+        Long reference,
         SectionType type
-) { }
+) {}

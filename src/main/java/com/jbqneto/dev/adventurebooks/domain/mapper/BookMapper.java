@@ -1,18 +1,22 @@
 package com.jbqneto.dev.adventurebooks.domain.mapper;
 
-import com.jbqneto.dev.adventurebooks.api.dto.request.*;
+import com.jbqneto.dev.adventurebooks.api.dto.request.CreateBookRequestDto;
+import com.jbqneto.dev.adventurebooks.api.dto.request.CreateConsequenceDto;
+import com.jbqneto.dev.adventurebooks.api.dto.request.CreateOptionDto;
+import com.jbqneto.dev.adventurebooks.api.dto.request.CreateSectionDto;
 import com.jbqneto.dev.adventurebooks.api.dto.response.BookCreatedResponseDto;
 import com.jbqneto.dev.adventurebooks.api.dto.response.BookDetailsResponseDto;
 import com.jbqneto.dev.adventurebooks.api.dto.response.BookSummaryResponseDto;
-import com.jbqneto.dev.adventurebooks.domain.model.*;
+import com.jbqneto.dev.adventurebooks.domain.model.Book;
+import com.jbqneto.dev.adventurebooks.domain.model.Consequence;
+import com.jbqneto.dev.adventurebooks.domain.model.Option;
+import com.jbqneto.dev.adventurebooks.domain.model.Section;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface BookMapper {
@@ -41,7 +45,7 @@ public interface BookMapper {
 
 
     @Named("mapNextSection")
-    default Section mapNextSection(int nextSectionReference) {
+    default Section mapNextSection(long nextSectionReference) {
         var nextSection = new Section();
         nextSection.setReference(nextSectionReference);
 

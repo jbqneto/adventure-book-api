@@ -47,14 +47,13 @@ public class BookService {
         }
 
         book.setCategories(categories);
-        Map<Integer, Section> sectionsByRef = new HashMap<>();
+        Map<Long, Section> sectionsByRef = new HashMap<>();
 
         for (var section : book.getSections()) {
             section.setBook(book);
             sectionsByRef.put(section.getReference(), section);
         }
 
-        // --- Link options + consequences ---
         for (var section : book.getSections()) {
             if (section.getOptions() == null) continue;
 
@@ -67,7 +66,6 @@ public class BookService {
             }
         }
 
-        // --- Resolve nextSection ---
         for (var sectionDto : bookDto.sections()) {
             var section = sectionsByRef.get(sectionDto.reference());
 
