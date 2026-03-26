@@ -68,26 +68,25 @@ public class BookService {
             }
         }
 
-        for (var sectionDto : bookDto.sections()) {
-            Section section = sectionsByRef.get(sectionDto.id());
+        List<Option> options = book.getSections()
+                .stream()
+                .flatMap(section -> section.getOptions().stream())
+                .toList();
 
-            if (sectionDto.options() == null || section.getOptions() == null) continue;
+        for (Option option: options) {
 
-            for (int i = 0; i < sectionDto.options().size(); i++) {
-                var optionDto = sectionDto.options().get(i);
-                Option option = section.getOptions().get(i);
+            var target = sectionsByRef.get(option.getNextSection().getReference());
 
-                var target = sectionsByRef.get(optionDto.gotoId());
-
-                //This should be already validated, but double-checking
-                if (target == null) {
-                    throw new InvalidSectionException(
-                            "Reference %s has invalid target section: %s".formatted(option.getSection().getReference(), optionDto.gotoId())
-                    );
-                }
-
-                option.setNextSection(target);
+            //Double-checking (Already validated)
+            if (target == null) {
+                throw new InvalidSectionException(
+                        "Section %s has an option pointing to invalid section %s"
+                                .formatted(option.getSection().getReference(), option.getNextSection().getReference())
+                );
             }
+
+            option.setNextSection(target);
+
         }
 
         var saved = bookRepository.save(book);
