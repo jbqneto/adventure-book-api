@@ -6,7 +6,7 @@ This application allows players to start an adventure, navigate through sections
 
 ---
 
-## 🚀 Tech Stack
+## Tech Stack
 
 * Java 21
 * Spring Boot
@@ -39,7 +39,7 @@ This application allows players to start an adventure, navigate through sections
 
 ---
 
-## 🛠️ How to Build
+## How to Build
 
 Make sure you have:
 
@@ -54,7 +54,7 @@ mvn clean install
 
 ---
 
-## ▶️ How to Run
+## How to Run
 
 ```bash
 mvn spring-boot:run
@@ -68,7 +68,7 @@ http://localhost:8080
 
 ---
 
-## 🧪 Database
+## Database
 
 This project uses **H2 in-memory database**.
 
@@ -90,7 +90,7 @@ Password: (empty)
 
 ---
 
-## 📡 API Overview
+## API Overview
 
 http://localhost:8080/swagger-ui/index.html
 
@@ -104,26 +104,11 @@ mvn test
 
 ---
 
-## 📌 Notes
-
-* This project follows a **DDD-inspired layered architecture**
-* Business logic is implemented in services
-* Controllers are thin (no business rules)
-* MapStruct is used for DTO mapping
-* Relationships are handled explicitly to avoid JPA pitfalls
-
----
-
 ## 💡 Future Improvements
 
 * Add pagination to book listing
 * Add authentication (Spring Security)
 * Support PostgreSQL profile
-* Add Swagger/OpenAPI documentation
 * Improve validation layer
 
 ---
-
-## 👨‍💻 Author
-
-Developed as part of a backend engineering challenge.
