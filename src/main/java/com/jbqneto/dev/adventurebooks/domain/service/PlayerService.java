@@ -3,6 +3,7 @@ package com.jbqneto.dev.adventurebooks.domain.service;
 import com.jbqneto.dev.adventurebooks.api.dto.request.CreatePlayerRequestDto;
 import com.jbqneto.dev.adventurebooks.api.dto.response.GetPlayersResponseDto;
 import com.jbqneto.dev.adventurebooks.domain.exception.PlayerNotFoundException;
+import com.jbqneto.dev.adventurebooks.domain.exception.ResourceAlreadyExistsException;
 import com.jbqneto.dev.adventurebooks.domain.model.Player;
 import com.jbqneto.dev.adventurebooks.infraestructure.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class PlayerService {
         var existing = playerRepository.findByUsername(request.username());
 
         if (existing.isPresent()) {
-            throw new IllegalArgumentException("Username already exists");
+            throw new ResourceAlreadyExistsException("Username already exists");
         }
 
         var player = new Player();

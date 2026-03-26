@@ -9,6 +9,7 @@ import com.jbqneto.dev.adventurebooks.domain.enumType.DifficultyLevel;
 import com.jbqneto.dev.adventurebooks.domain.exception.BookNotFoundException;
 import com.jbqneto.dev.adventurebooks.domain.exception.CategoryNotFoundException;
 import com.jbqneto.dev.adventurebooks.domain.exception.InvalidSectionException;
+import com.jbqneto.dev.adventurebooks.domain.exception.ResourceAlreadyExistsException;
 import com.jbqneto.dev.adventurebooks.domain.mapper.BookMapper;
 import com.jbqneto.dev.adventurebooks.domain.model.Book;
 import com.jbqneto.dev.adventurebooks.domain.model.Category;
@@ -40,7 +41,14 @@ public class BookService {
     public BookCreatedResponseDto createBook(CreateBookRequestDto bookDto) {
         BookValidator.validateBook(bookDto);
 
-        var book = bookMapper.toEntity(bookDto);
+        var existingBook = bookRepository.findBookByTitleAndAuthor(bookDto.title(), bookDto.author());
+
+        if (existingBook.isPresent()) {
+            throw new ResourceAlreadyExistsException("A book with the same title and author already registered");
+        }
+
+        Book book = bookMapper.toEntity(bookDto);
+
 
         List<Category> categories = categoryRepository.findAllById(bookDto.categories());
 
