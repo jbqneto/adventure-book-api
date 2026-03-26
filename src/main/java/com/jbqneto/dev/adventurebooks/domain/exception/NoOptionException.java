@@ -1,7 +1,11 @@
 package com.jbqneto.dev.adventurebooks.domain.exception;
 
-public class NoOptionException extends RuntimeException {
+public class NoOptionException extends BusinessViolationException {
+    public NoOptionException(String message) {
+        super(message);
+    }
+
     public NoOptionException() {
-        super("A non-ending section must have options");
+        this("A non-ending section must have options");
     }
 }

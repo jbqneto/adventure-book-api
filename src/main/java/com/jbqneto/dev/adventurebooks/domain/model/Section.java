@@ -24,7 +24,7 @@ public class Section {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //Book page
+    //Book page (coming as ID on input)
     @Column(name = "reference", nullable = false)
     private Long reference;
 

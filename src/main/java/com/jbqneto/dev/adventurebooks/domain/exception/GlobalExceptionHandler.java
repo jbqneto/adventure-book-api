@@ -77,6 +77,42 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public org.springframework.http.ResponseEntity<ApiErrorResponseDto> handleResourceExsitsException(
+            Exception ex,
+            HttpServletRequest request
+    ) {
+        var response = new ApiErrorResponseDto(
+                Instant.now(),
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return org.springframework.http.ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(response);
+    }
+
+    @ExceptionHandler(BusinessViolationException.class)
+    public org.springframework.http.ResponseEntity<ApiErrorResponseDto> handleInvalidInputException(
+            Exception ex,
+            HttpServletRequest request
+    ) {
+        var response = new ApiErrorResponseDto(
+                Instant.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return org.springframework.http.ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(response);
+    }
+
     @ExceptionHandler(NotFoundException.class)
     public org.springframework.http.ResponseEntity<ApiErrorResponseDto> handleNotFoundException(
             Exception ex,
@@ -91,7 +127,7 @@ public class GlobalExceptionHandler {
         );
 
         return org.springframework.http.ResponseEntity
-                .status(HttpStatus.CONFLICT)
+                .status(HttpStatus.NOT_FOUND)
                 .body(response);
     }
 
