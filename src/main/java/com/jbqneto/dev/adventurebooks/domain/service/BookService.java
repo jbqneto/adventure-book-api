@@ -8,9 +8,11 @@ import com.jbqneto.dev.adventurebooks.api.dto.response.BookSummaryResponseDto;
 import com.jbqneto.dev.adventurebooks.domain.enumType.DifficultyLevel;
 import com.jbqneto.dev.adventurebooks.domain.exception.BookNotFoundException;
 import com.jbqneto.dev.adventurebooks.domain.exception.CategoryNotFoundException;
+import com.jbqneto.dev.adventurebooks.domain.exception.InvalidSectionException;
 import com.jbqneto.dev.adventurebooks.domain.mapper.BookMapper;
 import com.jbqneto.dev.adventurebooks.domain.model.Book;
 import com.jbqneto.dev.adventurebooks.domain.model.Category;
+import com.jbqneto.dev.adventurebooks.domain.model.Option;
 import com.jbqneto.dev.adventurebooks.domain.model.Section;
 import com.jbqneto.dev.adventurebooks.domain.validation.BookValidator;
 import com.jbqneto.dev.adventurebooks.infraestructure.repository.BookRepository;
@@ -40,7 +42,7 @@ public class BookService {
 
         var book = bookMapper.toEntity(bookDto);
 
-        var categories = categoryRepository.findAllById(bookDto.categories());
+        List<Category> categories = categoryRepository.findAllById(bookDto.categories());
 
         if (categories.size() != bookDto.categories().size()) {
             throw new CategoryNotFoundException("One or more categories were not found");
@@ -67,19 +69,20 @@ public class BookService {
         }
 
         for (var sectionDto : bookDto.sections()) {
-            var section = sectionsByRef.get(sectionDto.reference());
+            Section section = sectionsByRef.get(sectionDto.id());
 
             if (sectionDto.options() == null || section.getOptions() == null) continue;
 
             for (int i = 0; i < sectionDto.options().size(); i++) {
                 var optionDto = sectionDto.options().get(i);
-                var option = section.getOptions().get(i);
+                Option option = section.getOptions().get(i);
 
-                var target = sectionsByRef.get(optionDto.nextSectionReference());
+                var target = sectionsByRef.get(optionDto.gotoId());
 
+                //This should be already validated, but double-checking
                 if (target == null) {
-                    throw new IllegalArgumentException(
-                            "Invalid target section: " + optionDto.nextSectionReference()
+                    throw new InvalidSectionException(
+                            "Reference %s has invalid target section: %s".formatted(option.getSection().getReference(), optionDto.gotoId())
                     );
                 }
 

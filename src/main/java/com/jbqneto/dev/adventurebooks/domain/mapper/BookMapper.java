@@ -26,12 +26,13 @@ public interface BookMapper {
     Book toEntity(CreateBookRequestDto request);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "reference", source = "id")
     @Mapping(target = "book", ignore = true)
     Section toEntity(CreateSectionDto dto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "section", ignore = true)
-    @Mapping(target = "nextSection", source = "nextSectionReference", qualifiedByName = "mapNextSection")
+    @Mapping(target = "nextSection", source = "gotoId", qualifiedByName = "mapNextSection")
     @Mapping(target = "consequence", source = "consequence")
     Option toEntity(CreateOptionDto dto);
 
@@ -59,7 +60,7 @@ public interface BookMapper {
         }
 
         return dtos.stream()
-                .sorted(Comparator.comparing(CreateSectionDto::reference))
+                .sorted(Comparator.comparing(CreateSectionDto::id))
                 .map(this::toEntity)
                 .toList();
     }

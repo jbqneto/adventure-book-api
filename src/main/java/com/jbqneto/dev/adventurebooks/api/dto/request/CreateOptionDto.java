@@ -9,7 +9,7 @@ public record CreateOptionDto(
         String description,
 
         @Size(min = 1)
-        int nextSectionReference,
+        long gotoId,
 
         @Nullable
         CreateConsequenceDto consequence

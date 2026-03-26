@@ -9,11 +9,15 @@ import java.util.List;
 
 public record CreateSectionDto (
         @Size(min = 1)
-        int reference,
+        long id,
         @NotBlank
         String text,
         @NotNull
         SectionType type,
 
         List<CreateOptionDto> options
-) { }
+) {
+        public long reference() {
+                return id;
+        }
+}

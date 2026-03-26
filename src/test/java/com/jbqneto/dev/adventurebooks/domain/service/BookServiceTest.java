@@ -10,6 +10,7 @@ import com.jbqneto.dev.adventurebooks.domain.enumType.SectionType;
 import com.jbqneto.dev.adventurebooks.domain.exception.*;
 import com.jbqneto.dev.adventurebooks.domain.mapper.BookMapper;
 import com.jbqneto.dev.adventurebooks.domain.model.Book;
+import com.jbqneto.dev.adventurebooks.domain.model.Category;
 import com.jbqneto.dev.adventurebooks.infraestructure.repository.BookRepository;
 import com.jbqneto.dev.adventurebooks.infraestructure.repository.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
@@ -24,9 +25,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Set;
 
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class BookServiceTest {
 
+    //To test the mapping also
     private final BookMapper bookMapper = Mappers.getMapper(BookMapper.class);
 
     @Mock
@@ -53,11 +57,36 @@ class BookServiceTest {
                 "J. R. R. Tolkien",
                 "The Cave Adventure",
                 DifficultyLevel.EASY,
-                Set.of(1, 2),
+                Set.of(1L, 2L),
                 List.of(beginSection, middleSection(10, 2), middleSection(5,3), middleSection, endSection)
         );
 
-        var book = serviceUnderTest.createBook(bookRequest);
+        when(categoryRepository.findAllById(Set.of(1L,2L)))
+                .thenReturn(List.of(
+                    new Category(1L, "Cat 1"),
+                        new Category(1L, "Cat 2")
+        ));
+
+        serviceUnderTest.createBook(bookRequest);
+
+        Mockito.verify(bookRepository).save(Mockito.any(Book.class));
+    }
+
+    @Test
+    void shouldCreateBookWithoutSection() {
+        var beginSection = beginSection(1);
+        var middleSection = middleSection(2, 3);
+        var endSection = endSection();
+
+        var bookRequest = new CreateBookRequestDto(
+                "J. R. R. Tolkien",
+                "The Cave Adventure",
+                DifficultyLevel.EASY,
+                Set.of(),
+                List.of(beginSection, middleSection(10, 2), middleSection(5,3), middleSection, endSection)
+        );
+
+        serviceUnderTest.createBook(bookRequest);
 
         Mockito.verify(bookRepository).save(Mockito.any(Book.class));
     }
@@ -70,7 +99,7 @@ class BookServiceTest {
                 "J. R. R. Tolkien",
                 "The Cave Adventure",
                 DifficultyLevel.EASY,
-                Set.of(1, 2),
+                Set.of(1L, 2L),
                 List.of(middleSection(1, 3))
         );
 
@@ -88,7 +117,7 @@ class BookServiceTest {
                 "J. R. R. Tolkien",
                 "The Cave Adventure",
                 DifficultyLevel.EASY,
-                Set.of(1),
+                Set.of(1L),
                 List.of(beginSection(1), beginSection(2))
         );
 
@@ -104,7 +133,7 @@ class BookServiceTest {
                 "J. R. R. Tolkien",
                 "The Cave Adventure",
                 DifficultyLevel.EASY,
-                Set.of(1),
+                Set.of(1L),
                 List.of(beginSection(1), middleSection(2, 1))
         );
 
@@ -120,7 +149,7 @@ class BookServiceTest {
                 "J. R. R. Tolkien",
                 "The Cave Adventure",
                 DifficultyLevel.EASY,
-                Set.of(1),
+                Set.of(1L),
                 List.of(beginSection(1), endSection(), middleSection(2, 300))
         );
 
@@ -136,7 +165,7 @@ class BookServiceTest {
                 "J. R. R. Tolkien",
                 "The Cave Adventure",
                 DifficultyLevel.EASY,
-                Set.of(1),
+                Set.of(1L),
                 List.of(beginSection(1), middleSectionWithoutOptions(), endSection(5))
         );
 

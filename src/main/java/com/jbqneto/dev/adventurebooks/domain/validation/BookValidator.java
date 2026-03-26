@@ -18,11 +18,11 @@ public class BookValidator {
     }
 
     private static void validateBookSections(CreateBookRequestDto book) {
-        Set<Integer> sections = new HashSet<>();
+        Set<Long> sections = new HashSet<>();
         Set<CreateOptionDto> options = new HashSet<>();
 
         for (CreateSectionDto section : book.sections()) {
-            sections.add(section.reference());
+            sections.add(section.id());
 
             if (section.type() != SectionType.END) {
                 validateNonEndingSection(section);
@@ -34,9 +34,9 @@ public class BookValidator {
         }
 
         options.forEach(option -> {
-            if (!sections.contains(option.nextSectionReference())) {
+            if (!sections.contains(option.gotoId())) {
                 throw new InvalidSectionException(
-                        "Option is referencing to inexistent section: %s".formatted(option.nextSectionReference())
+                        "Option is referencing to inexistent section: %s".formatted(option.gotoId())
                 );
             }
         });
@@ -45,10 +45,10 @@ public class BookValidator {
 
     private static void validateNonEndingSection(CreateSectionDto section) {
         if (section.options() == null || section.options().isEmpty()) {
-            throw new NoOptionException();
+            throw new NoOptionException("Section % has no options".formatted(section.id()));
         }
 
-        if (section.options().size() == 1 && section.options().getFirst().nextSectionReference() == section.reference()) {
+        if (section.options().size() == 1 && section.options().getFirst().gotoId() == section.id()) {
             throw new InvalidSectionException("Infinite loop section");
         }
     }
