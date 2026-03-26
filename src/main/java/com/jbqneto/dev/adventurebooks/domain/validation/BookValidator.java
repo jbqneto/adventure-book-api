@@ -45,7 +45,7 @@ public class BookValidator {
 
     private static void validateNonEndingSection(CreateSectionDto section) {
         if (section.options() == null || section.options().isEmpty()) {
-            throw new NoOptionException("Section % has no options".formatted(section.id()));
+            throw new NoOptionException("Section %s has no options".formatted(section.id()));
         }
 
         if (section.options().size() == 1 && section.options().getFirst().gotoId() == section.id()) {

@@ -4,6 +4,7 @@ import com.jbqneto.dev.adventurebooks.api.dto.error.ApiErrorResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,24 +17,6 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(CategoryAlreadyExistsException.class)
-    public org.springframework.http.ResponseEntity<ApiErrorResponseDto> handleCategoryAlreadyExists(
-            CategoryAlreadyExistsException ex,
-            HttpServletRequest request
-    ) {
-        var response = new ApiErrorResponseDto(
-                Instant.now(),
-                HttpStatus.CONFLICT.value(),
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-
-        return org.springframework.http.ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(response);
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public org.springframework.http.ResponseEntity<Map<String, Object>> handleValidation(
@@ -54,6 +37,8 @@ public class GlobalExceptionHandler {
         body.put("path", request.getRequestURI());
         body.put("fields", fields);
 
+        log.warn("Arguments not valid exception", ex);
+
         return org.springframework.http.ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(body);
@@ -64,6 +49,8 @@ public class GlobalExceptionHandler {
             IllegalArgumentException ex,
             HttpServletRequest request
     ) {
+        log.warn("Illegal arguments error", ex);
+
         ApiErrorResponseDto response = new ApiErrorResponseDto(
                 Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
@@ -82,6 +69,8 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request
     ) {
+        log.warn("existing resource error", ex);
+
         var response = new ApiErrorResponseDto(
                 Instant.now(),
                 HttpStatus.CONFLICT.value(),
@@ -100,6 +89,8 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request
     ) {
+        log.warn("Business error", ex);
+
         var response = new ApiErrorResponseDto(
                 Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
@@ -118,6 +109,7 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request
     ) {
+        log.warn("Not found error", ex);
         var response = new ApiErrorResponseDto(
                 Instant.now(),
                 HttpStatus.NOT_FOUND.value(),
@@ -148,6 +140,23 @@ public class GlobalExceptionHandler {
 
         return org.springframework.http.ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(response);
+    }
+
+    private ResponseEntity<ApiErrorResponseDto> generateErrorResponse(HttpStatus httpStatus,
+                                                                      Exception ex,
+                                                                      HttpServletRequest request) {
+
+        ApiErrorResponseDto response = new ApiErrorResponseDto(
+                Instant.now(),
+                httpStatus.value(),
+                httpStatus.getReasonPhrase(),
+                "Unexpected internal error",
+                request.getRequestURI()
+        );
+
+        return org.springframework.http.ResponseEntity
+                .status(httpStatus)
                 .body(response);
     }
 }
