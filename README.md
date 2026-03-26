@@ -17,13 +17,13 @@ This application allows players to start an adventure, navigate through sections
 
 ## Objectives
 
-* 0 - Create book with validation
-* 1 - List all existing books and allow for searching by title, author, category or difficulty
-* 2 - Retrieve a book’s details and allow for adding/removing categories from a book
-* 3 - Allow to read a book and jump between sections.
-* 4 - Handle the consequences mechanism for a player
-* 5 - Allow for different players each with its own progress (save, stop/pause) [optional]
-* 6 - Allow for adding new books to the collection [optional]
+* 1 - Create book with validation
+* 2 - List all existing books and allow for searching by title, author, category or difficulty
+* 3 - Retrieve a book’s details and allow for adding/removing categories from a book
+* 4 - Allow to read a book and jump between sections.
+* 5 - Handle the consequences mechanism for a player
+* 6 - Allow for different players each with its own progress (save, stop/pause) [optional]
+* 7 - Allow for adding new books to the collection [optional]
 
 ## Features
 
@@ -96,7 +96,7 @@ http://localhost:8080/swagger-ui/index.html
 
 ---
 
-## 🧪 Running Tests
+## Running Tests
 
 ```bash
 mvn test
@@ -104,11 +104,13 @@ mvn test
 
 ---
 
-## 💡 Future Improvements
+## Future Improvements
 
 * Add pagination to book listing
 * Add authentication (Spring Security)
 * Support PostgreSQL profile
 * Improve validation layer
+* Add tests to AdventureService
+* Improve tests
 
 ---
