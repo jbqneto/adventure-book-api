@@ -50,4 +50,5 @@ public class PlayerProgress {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ProgressStatus status = ProgressStatus.IN_PROGRESS;
+
 }

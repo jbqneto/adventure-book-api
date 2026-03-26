@@ -8,6 +8,7 @@ import com.jbqneto.dev.adventurebooks.domain.enumType.ConsequenceType;
 import com.jbqneto.dev.adventurebooks.domain.enumType.ProgressStatus;
 import com.jbqneto.dev.adventurebooks.domain.enumType.SectionType;
 import com.jbqneto.dev.adventurebooks.domain.exception.*;
+import com.jbqneto.dev.adventurebooks.domain.handler.ConsequenceRegistry;
 import com.jbqneto.dev.adventurebooks.domain.mapper.AdventureMapper;
 import com.jbqneto.dev.adventurebooks.domain.model.*;
 import com.jbqneto.dev.adventurebooks.infraestructure.repository.BookRepository;
@@ -27,6 +28,7 @@ public class AdventureService {
     private final BookRepository bookRepository;
     private final PlayerRepository playerRepository;
     private final PlayerProgressRepository playerProgressRepository;
+    private final ConsequenceRegistry consequenceRegistry;
 
     private final AdventureMapper adventureMapper;
 
@@ -48,20 +50,23 @@ public class AdventureService {
 
         //Objective 4: Handle the consequences mechanism for a player.
         //TODO: Consequence handler (strategy)
-        if (consequence != null) {
-            switch (consequence.getType()) {
-                case LOSE_HEALTH -> health -= consequence.getValue();
-                case GAIN_HEALTH -> health += consequence.getValue();
-                case DIE -> health = 0;
-            }
 
-        }
+        consequenceRegistry.get(consequence)
+                .apply(progress, option);
+
+        GetSectionDto nextSectionResponse = null;
 
         if (health == 0) {
             progress.setStatus(ProgressStatus.DEAD);
+        } else {
+            nextSectionResponse = new GetSectionDto(
+                    nextSection.getId(),
+                    nextSection.getText(),
+                    nextSection.getOptions().stream()
+                            .map(opt -> new GetOptionDto(opt.getId(), opt.getDescription(), opt.getNextSection().getReference()))
+                            .toList()
+            );
         }
-
-        //TODO: Calculate consequence on this choice properly
 
         return new AdventureResponseDto(
                 adventureId,
@@ -70,14 +75,7 @@ public class AdventureService {
                 progress.getBook().getId(),
                 progress.getBook().getTitle(),
                 progress.getHealth(),
-                new GetSectionDto(
-                        nextSection.getId(),
-                        nextSection.getText(),
-                        nextSection.getOptions().stream()
-                                .map(opt -> new GetOptionDto(opt.getId(), opt.getDescription(), opt.getNextSection().getReference()))
-                                .toList()
-                )
-
+                nextSectionResponse
         );
     }
 
