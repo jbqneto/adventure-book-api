@@ -20,11 +20,8 @@ public interface AdventureMapper {
     @Mapping(target = "playerName", source = "player.username")
     @Mapping(target = "bookId", source = "book.id")
     @Mapping(target = "bookTitle", source = "book.title")
-    @Mapping(target = "currentSectionReference", source = "currentSection.reference")
-    @Mapping(target = "currentText", source = "currentSection.text")
     @Mapping(target = "health", source = "health")
     @Mapping(target = "status", expression = "java(progress.getStatus().name())")
-    @Mapping(target = "options", source = "currentSection.options")
     AdventureResponseDto toResponseDto(PlayerProgress progress);
 
     @Mapping(target = "optionId", source = "id")

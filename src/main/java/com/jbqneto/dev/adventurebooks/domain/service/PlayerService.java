@@ -6,6 +6,7 @@ import com.jbqneto.dev.adventurebooks.api.dto.response.GetPlayerAdventuresRespon
 import com.jbqneto.dev.adventurebooks.api.dto.response.GetPlayersResponseDto;
 import com.jbqneto.dev.adventurebooks.domain.enumType.ProgressStatus;
 import com.jbqneto.dev.adventurebooks.domain.exception.PlayerNotFoundException;
+import com.jbqneto.dev.adventurebooks.domain.exception.ResourceAlreadyExistsException;
 import com.jbqneto.dev.adventurebooks.domain.model.Player;
 import com.jbqneto.dev.adventurebooks.infraestructure.repository.PlayerProgressRepository;
 import com.jbqneto.dev.adventurebooks.infraestructure.repository.PlayerRepository;
@@ -28,7 +29,16 @@ public class PlayerService {
     }
 
     public GetPlayersResponseDto create(CreatePlayerRequestDto request) {
-        return null;
+        var existing = playerRepository.findByUsername(request.username());
+
+        if (existing.isPresent()) {
+            throw new ResourceAlreadyExistsException("Username already exists");
+        }
+
+        var player = new Player();
+        player.setUsername(request.username());
+
+        return new GetPlayersResponseDto(playerRepository.save(player));
     }
 
     public void delete(Long playerId) {
@@ -43,7 +53,7 @@ public class PlayerService {
         Player player = playerRepository.findById(playerId)
                 .orElseThrow(PlayerNotFoundException::new);
 
-        List<AdventureSummaryDto> adventures = playerProgressRepository.findbyPlayerIdAndStatus(playerId, ProgressStatus.IN_PROGRESS)
+        List<AdventureSummaryDto> adventures = playerProgressRepository.findByPlayerIdAndStatus(playerId, ProgressStatus.IN_PROGRESS)
                 .stream()
                 .map(progress -> new AdventureSummaryDto(
                         progress.getBook().getId(),

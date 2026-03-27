@@ -76,7 +76,7 @@ public class AdventureService {
                 progress.getPlayer().getUsername(),
                 progress.getBook().getId(),
                 progress.getBook().getTitle(),
-                progress.getStatus(),
+                progress.getStatus().name(),
                 progress.getHealth(),
                 nextSectionResponse
         );
@@ -102,6 +102,7 @@ public class AdventureService {
                 player.getUsername(),
                 book.getId(),
                 book.getTitle(),
+                playerProgress.getStatus().name(),
                 playerProgress.getHealth(),
                 new GetSectionDto(beginSection.getId(), beginSection.getText(), List.of())
         );

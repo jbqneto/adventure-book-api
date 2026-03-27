@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface PlayerProgressRepository extends JpaRepository<PlayerProgress, Long> {
 
-    List<PlayerProgress> findbyPlayerIdAndStatus(Long playerId, ProgressStatus status);
+    List<PlayerProgress> findByPlayerIdAndStatus(Long playerId, ProgressStatus status);
+
 }
