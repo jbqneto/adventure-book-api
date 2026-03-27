@@ -37,6 +37,10 @@ public class AdventureService {
         PlayerProgress progress = playerProgressRepository.findById(adventureId)
                 .orElseThrow(AdventureNotFoundException::new);
 
+        if (progress.getStatus() != ProgressStatus.IN_PROGRESS) {
+            throw new BusinessViolationException("You can only move forward with an active story");
+        }
+
         Section currentSection = progress.getCurrentSection();
 
         var option = currentSection.getOptions().stream()
@@ -48,9 +52,7 @@ public class AdventureService {
         Consequence consequence = option.getConsequence();
         int health = progress.getHealth();
 
-        //Objective 4: Handle the consequences mechanism for a player.
-        //TODO: Consequence handler (strategy)
-
+        //Objective 4: Handle the consequence mechanism for a player.
         consequenceRegistry.get(consequence)
                 .apply(progress, option);
 
@@ -74,6 +76,7 @@ public class AdventureService {
                 progress.getPlayer().getUsername(),
                 progress.getBook().getId(),
                 progress.getBook().getTitle(),
+                progress.getStatus(),
                 progress.getHealth(),
                 nextSectionResponse
         );
@@ -116,6 +119,9 @@ public class AdventureService {
 
     //TODO:
     public AdventureResponseDto get(Long adventureId) {
-        return null;
+        PlayerProgress progress = playerProgressRepository.findById(adventureId)
+                .orElseThrow(AdventureNotFoundException::new);
+
+        return adventureMapper.toResponseDto(progress);
     }
 }

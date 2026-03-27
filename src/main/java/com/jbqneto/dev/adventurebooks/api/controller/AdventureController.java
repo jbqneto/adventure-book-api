@@ -32,7 +32,6 @@ public class AdventureController {
 
     /**
      * Choose an option and advance the story
-     * TODO: Change to use body to make it more flexible
      */
     @PostMapping("/{adventureId}/choices/{choiceId}")
     public AdventureResponseDto chooseOption(

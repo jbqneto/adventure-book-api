@@ -1,6 +1,7 @@
 package com.jbqneto.dev.adventurebooks.api.controller;
 
 import com.jbqneto.dev.adventurebooks.api.dto.request.CreatePlayerRequestDto;
+import com.jbqneto.dev.adventurebooks.api.dto.response.GetPlayerAdventuresResponseDto;
 import com.jbqneto.dev.adventurebooks.api.dto.response.GetPlayersResponseDto;
 import com.jbqneto.dev.adventurebooks.domain.service.PlayerService;
 import lombok.RequiredArgsConstructor;
@@ -28,5 +29,11 @@ public class PlayerController {
     @DeleteMapping("/{playerId}")
     public void deletePlayer(@PathVariable Long playerId) {
         playerService.delete(playerId);
+    }
+
+    @GetMapping("/{playerId}/adventures")
+    public GetPlayerAdventuresResponseDto getPlayerActiveAdvendures(@PathVariable Long playerId) {
+
+        return playerService.getActiveAdventures(playerId);
     }
 }

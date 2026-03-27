@@ -23,6 +23,6 @@ public class Player {
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "player", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PlayerProgress> progressEntries = new ArrayList<>();
 }
