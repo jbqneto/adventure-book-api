@@ -50,18 +50,24 @@ public class AdventureService {
 
         Section nextSection = option.getNextSection();
         Consequence consequence = option.getConsequence();
-        int health = progress.getHealth();
 
         //Objective 4: Handle the consequence mechanism for a player.
-        consequenceRegistry.get(consequence)
-                .apply(progress, option);
+        if (consequence != null) {
+            consequenceRegistry.get(consequence).apply(progress, option);
+        }
 
         GetSectionDto nextSectionResponse = null;
+        int health = progress.getHealth();
 
         if (health == 0) {
             progress.setStatus(ProgressStatus.DEAD);
             playerProgressRepository.delete(progress);
         } else {
+
+            progress.setCurrentSection(nextSection);
+
+            playerProgressRepository.save(progress);
+
             nextSectionResponse = new GetSectionDto(
                     nextSection.getId(),
                     nextSection.getText(),

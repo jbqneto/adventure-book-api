@@ -2,6 +2,7 @@ package com.jbqneto.dev.adventurebooks.domain.handler;
 
 import com.jbqneto.dev.adventurebooks.domain.enumType.ConsequenceType;
 import com.jbqneto.dev.adventurebooks.domain.model.Consequence;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -17,7 +18,7 @@ public class ConsequenceRegistry {
         handlers.forEach(handler -> handlersMap.put(handler.handleConsequence(), handler));
     }
 
-    public ConsequenceHandler get(Consequence consequence) {
+    public ConsequenceHandler get(@NotNull Consequence consequence) {
         ConsequenceHandler handler = handlersMap.get(consequence.getType());
 
         if (handler == null) {

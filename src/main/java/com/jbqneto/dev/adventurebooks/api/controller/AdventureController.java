@@ -33,7 +33,7 @@ public class AdventureController {
     /**
      * Choose an option and advance the story
      */
-    @PostMapping("/{adventureId}/choices/{choiceId}")
+    @PostMapping("/{adventureId}/choose/{choiceId}")
     public AdventureResponseDto chooseOption(
             @PathVariable Long adventureId,
             @PathVariable Long choiceId

@@ -9,6 +9,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -110,6 +111,25 @@ public class GlobalExceptionHandler {
             HttpServletRequest request
     ) {
         log.warn("Not found error", ex);
+        var response = new ApiErrorResponseDto(
+                Instant.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return org.springframework.http.ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
+
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public org.springframework.http.ResponseEntity<ApiErrorResponseDto> handleResourceNotFound(
+            Exception ex,
+            HttpServletRequest request
+    ) {
         var response = new ApiErrorResponseDto(
                 Instant.now(),
                 HttpStatus.NOT_FOUND.value(),
