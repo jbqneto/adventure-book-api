@@ -60,6 +60,7 @@ public class AdventureService {
 
         if (health == 0) {
             progress.setStatus(ProgressStatus.DEAD);
+            playerProgressRepository.delete(progress);
         } else {
             nextSectionResponse = new GetSectionDto(
                     nextSection.getId(),
@@ -89,6 +90,10 @@ public class AdventureService {
         Player player = playerRepository.findById(request.playerId())
                 .orElseThrow(PlayerNotFoundException::new);
 
+        if (playerProgressRepository.existsByPlayerIdAndBookId(request.playerId(), request.bookId())) {
+            throw new BusinessViolationException("This player already started this adventure");
+        }
+
         PlayerProgress playerProgress = createNewAdventure(book, player);
 
         Section beginSection = book.getSections().stream()
@@ -96,16 +101,7 @@ public class AdventureService {
                 .findFirst()
                 .orElseThrow(() -> new SectionNotFoundException("Begin section not found"));
 
-        return new AdventureResponseDto(
-                playerProgress.getId(),
-                player.getId(),
-                player.getUsername(),
-                book.getId(),
-                book.getTitle(),
-                playerProgress.getStatus().name(),
-                playerProgress.getHealth(),
-                new GetSectionDto(beginSection.getId(), beginSection.getText(), List.of())
-        );
+        return adventureMapper.toResponseDto(playerProgress);
     }
 
     private PlayerProgress createNewAdventure(Book book, Player player) {

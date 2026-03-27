@@ -9,5 +9,6 @@ import java.util.List;
 public interface PlayerProgressRepository extends JpaRepository<PlayerProgress, Long> {
 
     List<PlayerProgress> findByPlayerIdAndStatus(Long playerId, ProgressStatus status);
+    boolean existsByPlayerIdAndBookId(Long playerId, Long bookId);
 
 }
